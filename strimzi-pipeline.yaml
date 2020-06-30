@@ -1,0 +1,21 @@
+apiVersion: tekton.dev/v1alpha1
+kind: Pipeline
+metadata:
+  name: strimzi-pipeline
+spec:
+  tasks:
+    - name: create-topic
+      params:
+        - name: TOPIC_NAME
+          value: pipeline-topic
+        - name: PARTITIONS
+          value: '24'
+        - name: REPLICATION_FACTOR
+          value: '3'
+        - name: CLUSTER
+          value: my-cluster
+        - name: NAMESPACE
+          value: kafka
+      taskRef:
+        kind: Task
+        name: create-topic-task

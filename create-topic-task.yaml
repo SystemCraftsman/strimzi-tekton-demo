@@ -1,0 +1,44 @@
+apiVersion: tekton.dev/v1alpha1
+kind: Task
+metadata:
+  name: create-topic-task
+spec:
+  params:
+    - name: TOPIC_NAME
+      type: string
+    - name: PARTITIONS
+      type: string
+    - name: REPLICATION_FACTOR
+      type: string
+    - name: CLUSTER
+      type: string
+    - name: NAMESPACE
+      type: string
+  steps:
+    - args:
+        - '-c'
+        - >-
+          mkdir -p /tekton/home/.kube; kubectl config view >
+          /tekton/home/.kube/config
+      command:
+        - /bin/bash
+      image: gcr.io/cloud-builders/kubectl
+      name: set-kubeconfig
+      resources: {}
+    - command:
+        - kfk
+        - topics
+        - '--create'
+        - '--topic'
+        - $(inputs.params.TOPIC_NAME)
+        - '--partitions'
+        - $(inputs.params.PARTITIONS)
+        - '--replication-factor'
+        - $(inputs.params.REPLICATION_FACTOR)
+        - '-c'
+        - $(inputs.params.CLUSTER)
+        - '-n'
+        - $(inputs.params.NAMESPACE)
+      image: quay.io/systemcraftsman/strimzi-kafka-cli
+      name: create-topic
+      resources: {}
