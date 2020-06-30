@@ -4,7 +4,7 @@ metadata:
   name: strimzi-pipeline
 spec:
   tasks:
-    - name: create-topic
+    - name: create-topic-task
       params:
         - name: TOPIC_NAME
           value: pipeline-topic
