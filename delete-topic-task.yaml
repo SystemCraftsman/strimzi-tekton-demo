@@ -22,8 +22,7 @@ spec:
       name: set-kubeconfig
       resources: {}
     - command:
-        - /usr/local/bin/kfk
-      args:
+        - "kfk"
         - "topics"
         - "--delete"
         - "--topic"

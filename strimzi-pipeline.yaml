@@ -41,7 +41,7 @@ spec:
         - name: NAMESPACE
           value: $(params.NAMESPACE)
       runAfter:
-        - create-topic
+        - create-topic-task
       taskRef:
         kind: Task
         name: delete-topic-task
