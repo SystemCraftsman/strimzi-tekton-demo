@@ -1,14 +1,10 @@
 apiVersion: tekton.dev/v1alpha1
 kind: Task
 metadata:
-  name: create-topic-task
+  name: delete-topic-task
 spec:
   params:
     - name: TOPIC_NAME
-      type: string
-    - name: PARTITIONS
-      type: string
-    - name: REPLICATION_FACTOR
       type: string
     - name: CLUSTER
       type: string
@@ -29,17 +25,13 @@ spec:
         - /usr/local/bin/kfk
       args:
         - "topics"
-        - "--create"
+        - "--delete"
         - "--topic"
         - $(inputs.params.TOPIC_NAME)
-        - "--partitions"
-        - $(inputs.params.PARTITIONS)
-        - "--replication-factor"
-        - $(inputs.params.REPLICATION_FACTOR)
         - "-c"
         - $(inputs.params.CLUSTER)
         - "-n"
         - $(inputs.params.NAMESPACE)
       image: quay.io/systemcraftsman/strimzi-kafka-cli
-      name: create-topic
+      name: delete-topic
       resources: {}

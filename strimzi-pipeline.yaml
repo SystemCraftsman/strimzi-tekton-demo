@@ -3,19 +3,56 @@ kind: Pipeline
 metadata:
   name: strimzi-pipeline
 spec:
+  params:
+        - name: TOPIC_NAME
+          default: pipeline-topic
+        - name: DELETED_TOPIC_NAME
+          default: deleted-pipeline-topic
+        - name: PARTITIONS
+          default: '24'
+        - name: REPLICATION_FACTOR
+          default: '3'
+        - name: CLUSTER
+          default: my-cluster
+        - name: NAMESPACE
+          default: kafka
   tasks:
     - name: create-topic
       params:
         - name: TOPIC_NAME
-          value: pipeline-topic
+          value: $(params.TOPIC_NAME)
         - name: PARTITIONS
-          value: '24'
+          value: $(params.PARTITIONS)
         - name: REPLICATION_FACTOR
-          value: '3'
+          value: $(params.REPLICATION_FACTOR)
         - name: CLUSTER
-          value: my-cluster
+          value: $(params.CLUSTER)
         - name: NAMESPACE
-          value: kafka
+          value: $(params.NAMESPACE)
       taskRef:
         kind: Task
         name: create-topic-task
+    - name: delete-topic-task
+      params:
+        - name: TOPIC_NAME
+          value: $(params.DELETED_TOPIC_NAME)
+        - name: CLUSTER
+          value: $(params.CLUSTER)
+        - name: NAMESPACE
+          value: $(params.NAMESPACE)
+      runAfter:
+        - create-topic
+      taskRef:
+        kind: Task
+        name: delete-topic-task
+    - name: list-topics-task
+      params:
+        - name: CLUSTER
+          value: $(params.CLUSTER)
+        - name: NAMESPACE
+          value: $(params.NAMESPACE)
+      runAfter:
+        - delete-topic-task
+      taskRef:
+        kind: Task
+        name: list-topics-task
