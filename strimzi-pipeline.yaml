@@ -17,7 +17,7 @@ spec:
         - name: NAMESPACE
           default: kafka
   tasks:
-    - name: create-topic
+    - name: create-topic-task
       params:
         - name: TOPIC_NAME
           value: $(params.TOPIC_NAME)
